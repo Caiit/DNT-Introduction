@@ -53,14 +53,15 @@ def close_webcam(cap):
     cap.release()
 
 
-def create_video_connection():
+def create_video_connection(ip=None, port=None):
     '''
     Create a connection with the robot and start a camera proxy.
     https://gist.github.com/takamin/990aa0133919aa58944d
     '''
+    if ip == None: ip = IP
+    if port == None: port = PORT
     # Create proxy to nao
-    print("Creating ALVideoDevice proxy to ", IP)
-    cam_proxy = ALProxy("ALVideoDevice", IP, PORT)
+    cam_proxy = ALProxy("ALVideoDevice", ip, port)
     AL_kTopCamera = 0 # 0: topcamera
     AL_kQVGA = 1      # 320x240
     AL_kBGRColorSpace = 13
