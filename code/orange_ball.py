@@ -1,12 +1,18 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 import cv2
 import glob
 import numpy as np
 import os
 
+from naoqi import ALProxy
 
-WEBCAM = False
+
+IP = "EVE.local"
+PORT = 9559
+
+# 0: images from folder, 1: webcam, 2: robot
+CAMERA_TYPE = 2
 
 def read_imgs(img_dir):
     '''
@@ -47,6 +53,47 @@ def close_webcam(cap):
     cap.release()
 
 
+def create_video_connection():
+    '''
+    Create a connection with the robot and start a camera proxy.
+    https://gist.github.com/takamin/990aa0133919aa58944d
+    '''
+    # Create proxy to nao
+    print("Creating ALVideoDevice proxy to ", IP)
+    cam_proxy = ALProxy("ALVideoDevice", IP, PORT)
+    AL_kTopCamera = 0 # 0: topcamera
+    AL_kQVGA = 1      # 320x240
+    AL_kBGRColorSpace = 13
+    return cam_proxy, cam_proxy.subscribeCamera("top", AL_kTopCamera, AL_kQVGA, AL_kBGRColorSpace, 10)
+
+
+def get_img_from_robot(video_device, capture_device):
+    '''
+    Get a frame from the robot.
+    https://gist.github.com/takamin/990aa0133919aa58944d
+    '''
+    # Create image
+    width = 320
+    height = 240
+    img = np.zeros((height, width, 3), np.uint8)
+    captured = video_device.getImageRemote(capture_device)
+    if captured == None:
+        print("Cannot capture")
+    elif captured[6] == None:
+        print("No image data string")
+    else:
+        # translate value to mat
+        values = map(ord, list(captured[6]))
+        i = 0
+        for y in range(0, height):
+            for x in range(0, width):
+                img.itemset((y, x, 0), values[i + 0])
+                img.itemset((y, x, 1), values[i + 1])
+                img.itemset((y, x, 2), values[i + 2])
+                i += 3
+    return img
+
+
 def mask_img(img):
     '''
     Create a binary image in which orange is white and the rest is black.
@@ -76,7 +123,7 @@ def detect_circles(img):
     r = None
     if circles is not None:
         # Draw the circles for debug
-        circles = np.int16(np.around(circles))
+        circles = np.uint16(np.around(circles))
         for circle in circles[0, :]:
             # 4 Points of Region of interest square
             x_min = circle[0] - circle[2]
@@ -115,7 +162,11 @@ def detect_orange_ball(img):
 
 
 def main():
-    if WEBCAM:
+    if CAMERA_TYPE == 2:
+        # Start connection with the robot
+        video_device, capture_device = create_video_connection()
+        next = True
+    elif CAMERA_TYPE == 1:
         # Start the webcam
         cap = start_webcam()
         next = True
@@ -126,7 +177,9 @@ def main():
         next = len(imgs) > 0
 
     while (next):
-        if WEBCAM:
+        if CAMERA_TYPE == 2:
+            img = get_img_from_robot(video_device, capture_device)
+        elif CAMERA_TYPE == 1:
             img = get_img_from_webcam(cap)
         else:
             img = imgs.pop()
@@ -141,7 +194,7 @@ def main():
             cv2.circle(img, (x, y), 2, (0, 0, 255), 3)
         # Show image
         cv2.imshow("Red ball detector", img)
-        if WEBCAM:
+        if CAMERA_TYPE > 0:
             # Quit with q
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -151,8 +204,10 @@ def main():
 
     cv2.destroyAllWindows()
 
-    if WEBCAM:
+    if CAMERA_TYPE == 1:
         close_webcam(cap)
+    elif CAMERA_TYPE == 2:
+        video_device.unsubscribe(capture_device)
 
 
 if __name__ == "__main__":
