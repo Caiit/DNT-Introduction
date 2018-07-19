@@ -12,7 +12,7 @@ IP = "EVE.local"
 PORT = 9559
 
 # 0: images from folder, 1: webcam, 2: robot
-CAMERA_TYPE = 2
+CAMERA_TYPE = 1
 
 def read_imgs(img_dir):
     '''
@@ -53,7 +53,7 @@ def close_webcam(cap):
     cap.release()
 
 
-def create_video_connection(ip=None, port=None):
+def create_video_connection(ip=None, port=None, camera=0):
     '''
     Create a connection with the robot and start a camera proxy.
     https://gist.github.com/takamin/990aa0133919aa58944d
@@ -62,7 +62,7 @@ def create_video_connection(ip=None, port=None):
     if port == None: port = PORT
     # Create proxy to nao
     cam_proxy = ALProxy("ALVideoDevice", ip, port)
-    AL_kTopCamera = 0 # 0: topcamera
+    AL_kTopCamera = camera # 0: topcamera, 1: bottomcamera
     AL_kQVGA = 1      # 320x240
     AL_kBGRColorSpace = 13
     return cam_proxy, cam_proxy.subscribeCamera("top", AL_kTopCamera, AL_kQVGA, AL_kBGRColorSpace, 10)
