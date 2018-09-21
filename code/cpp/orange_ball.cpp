@@ -1,8 +1,5 @@
 #include <dirent.h>
 #include <iostream>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 
 #include "orange_ball.h"
 
@@ -28,6 +25,18 @@ cv::VideoCapture OrangeBall::startWebcam() {
 
 void OrangeBall::getImgFromWebcam(cv::VideoCapture cap, cv::Mat& img) {
     cap >> img;
+}
+
+AL::ALVideoDeviceProxy* OrangeBall::startRobotCamera(std::string ip, int port) {
+  AL::ALVideoDeviceProxy* cam_proxy = new AL::ALVideoDeviceProxy(ip, port);
+  return cam_proxy;
+}
+
+void OrangeBall::getImgFromRobot(AL::ALVideoDeviceProxy* cam_proxy, std::string camera_client, cv::Mat img) {
+  AL::ALValue al_img = cam_proxy->getImageRemote(camera_client);
+
+  img.data = (uchar*) al_img[6].GetBinary();
+  cam_proxy->releaseImage(camera_client);
 }
 
 cv::Mat OrangeBall::maskImg(cv::Mat img) {
@@ -93,7 +102,8 @@ int main() {
   bool next = true;
   std::vector<cv::Mat> imgs;
   cv::VideoCapture cap;
-
+  AL::ALVideoDeviceProxy* cam_proxy;
+  std::string camera_client;
   // Prepare correct device
   if (orange_ball.camera_type_ == CameraType::folder) {
     imgs = orange_ball.readImgs("../../../img/");
@@ -106,6 +116,9 @@ int main() {
       std::cout << "Could not open webcam" << std::endl;
       return -1;
     }
+  } else if (orange_ball.camera_type_ == CameraType::robot) {
+    cam_proxy = orange_ball.startRobotCamera(orange_ball.IP, orange_ball.PORT);
+    camera_client = cam_proxy->subscribeCamera("camera", 0, AL::kQVGA, AL::kBGRColorSpace, 30);
   }
 
   cv::Mat img;
@@ -117,6 +130,8 @@ int main() {
       next = imgs.size() > 0;
     } else if (orange_ball.camera_type_ == CameraType::webcam) {
       orange_ball.getImgFromWebcam(cap, img);
+    } else if (orange_ball.camera_type_ == CameraType::robot) {
+      orange_ball.getImgFromRobot(cam_proxy, camera_client, img);
     }
 
     // Run ball detector
@@ -142,6 +157,8 @@ int main() {
 
   if (orange_ball.camera_type_ == CameraType::webcam) {
     cap.release();
+  } else if (orange_ball.camera_type_ == CameraType::robot) {
+    cam_proxy->unsubscribe(camera_client);
   }
 
   return 0;
