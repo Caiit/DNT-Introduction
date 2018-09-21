@@ -34,8 +34,9 @@ cv::Mat OrangeBall::maskImg(cv::Mat img) {
 
 Ball OrangeBall::detectCircles(cv::Mat img) {
   std::vector<cv::Vec3f> circles;
-
-  cv::HoughCircles(img, circles, CV_HOUGH_GRADIENT, 1.2, 200, 100, 5, 5, 150);
+  // Depending on opencv version
+  // cv::HoughCircles(img, circles, CV_HOUGH_GRADIENT, 1.2, 200, 100, 5, 5, 150);
+  cv::HoughCircles(img, circles, cv::HOUGH_GRADIENT, 1.2, 200, 100, 5, 5, 150);
 
   // The minimum amount of orange in a square
   float best_percentage_orange = 0.3;
@@ -67,7 +68,9 @@ Ball OrangeBall::detectCircles(cv::Mat img) {
 
 Ball OrangeBall::detectOrangeBall(cv::Mat img) {
   cv::Mat hsv;
-  cv::cvtColor(img, hsv, CV_BGR2HSV);
+  // Depending on opencv version
+  // cv::cvtColor(img, hsv, CV_BGR2HSV);
+  cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
   cv::Mat mask = maskImg(hsv);
 
   Ball ball = detectCircles(mask);

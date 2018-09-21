@@ -172,7 +172,7 @@ def main():
         next = True
     else:
         # Read images from folder
-        img_dir = "../img/"
+        img_dir = "../../img/"
         imgs = read_imgs(img_dir)
         next = len(imgs) > 0
 
