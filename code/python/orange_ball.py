@@ -193,7 +193,7 @@ def main():
             # Draw the center of the circle
             cv2.circle(img, (x, y), 2, (0, 0, 255), 3)
         # Show image
-        cv2.imshow("Red ball detector", img)
+        cv2.imshow("Orange ball detector", img)
         if CAMERA_TYPE > 0:
             # Quit with q
             if cv2.waitKey(1) & 0xFF == ord('q'):

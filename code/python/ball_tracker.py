@@ -149,7 +149,7 @@ def main():
                     search_for_ball(motion_proxy)
                 times_no_ball += 1
         # Show image
-        cv2.imshow("Red ball detector", img)
+        cv2.imshow("Orange ball detector", img)
 
         # Quit with q
         if cv2.waitKey(1) & 0xFF == ord('q'):
