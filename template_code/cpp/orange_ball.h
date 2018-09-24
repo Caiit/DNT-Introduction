@@ -115,7 +115,7 @@ private:
   /**
    * Specify which camera needs to be used.
    */
-  CameraType camera_type_ = CameraType::webcam;
+  CameraType camera_type_ = CameraType::folder;
 
   /**
    * Vector of images used when reading from a folder.
