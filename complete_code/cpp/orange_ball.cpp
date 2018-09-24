@@ -3,40 +3,46 @@
 
 #include "orange_ball.h"
 
-std::vector<cv::Mat> OrangeBall::readImgs(std::string img_dir) {
-  std::vector<cv::Mat> imgs;
 
+void OrangeBall::readImgs(std::string img_dir) {
   DIR* dirp = opendir(img_dir.c_str());
   struct dirent * dp;
   while ((dp = readdir(dirp)) != NULL) {
     cv::Mat image = cv::imread(img_dir + dp->d_name);
     if (image.data) {
-      imgs.push_back(image);
+      imgs_.push_back(image);
     }
   }
   closedir(dirp);
-
-  return imgs;
 }
 
-cv::VideoCapture OrangeBall::startWebcam() {
-  return cv::VideoCapture(0);
+void OrangeBall::startWebcam() {
+  cap_ = cv::VideoCapture(0);
 }
 
-void OrangeBall::getImgFromWebcam(cv::VideoCapture cap, cv::Mat& img) {
-    cap >> img;
+void OrangeBall::getImgFromWebcam(cv::Mat& img) {
+    cap_ >> img;
 }
 
-AL::ALVideoDeviceProxy* OrangeBall::startRobotCamera(std::string ip, int port) {
-  AL::ALVideoDeviceProxy* cam_proxy = new AL::ALVideoDeviceProxy(ip, port);
-  return cam_proxy;
+void OrangeBall::setRobotIpAndPort(std::string ip, int port) {
+  IP = ip;
+  PORT = port;
 }
 
-void OrangeBall::getImgFromRobot(AL::ALVideoDeviceProxy* cam_proxy, std::string camera_client, cv::Mat img) {
-  AL::ALValue al_img = cam_proxy->getImageRemote(camera_client);
+void OrangeBall::startRobotCamera() {
+  cam_proxy_ = new AL::ALVideoDeviceProxy(IP, PORT);
+  camera_client_ = cam_proxy_->subscribeCamera("camera", 0, AL::kQVGA, AL::kBGRColorSpace, 30);
+}
+
+void OrangeBall::stopRobotCamera() {
+  cam_proxy_->unsubscribe(camera_client_);
+}
+
+void OrangeBall::getImgFromRobot(cv::Mat& img) {
+  AL::ALValue al_img = cam_proxy_->getImageRemote(camera_client_);
 
   img.data = (uchar*) al_img[6].GetBinary();
-  cam_proxy->releaseImage(camera_client);
+  cam_proxy_->releaseImage(camera_client_);
 }
 
 cv::Mat OrangeBall::maskImg(cv::Mat img) {
@@ -94,48 +100,39 @@ Ball OrangeBall::detectOrangeBall(cv::Mat img) {
   return ball;
 }
 
-/**************************************************/
-
-int main() {
-  OrangeBall orange_ball;
-
+void OrangeBall::detect() {
   bool next = true;
-  std::vector<cv::Mat> imgs;
-  cv::VideoCapture cap;
-  AL::ALVideoDeviceProxy* cam_proxy;
-  std::string camera_client;
-  // Prepare correct device
-  if (orange_ball.camera_type_ == CameraType::folder) {
-    imgs = orange_ball.readImgs("../../../img/");
-    next = imgs.size() > 0;
-  } else if (orange_ball.camera_type_ == CameraType::webcam) {
+  if (camera_type_ == CameraType::folder) {
+    readImgs("./../../../../../img/");
+    next = imgs_.size() > 0;
+  } else if (camera_type_ == CameraType::webcam) {
     // Start webcam
-    cap = orange_ball.startWebcam();
-    if (!cap.isOpened()) {
+    startWebcam();
+    if (!cap_.isOpened()) {
       // Check if webcam is open
       std::cout << "Could not open webcam" << std::endl;
-      return -1;
+      return;
     }
-  } else if (orange_ball.camera_type_ == CameraType::robot) {
-    cam_proxy = orange_ball.startRobotCamera(orange_ball.IP, orange_ball.PORT);
-    camera_client = cam_proxy->subscribeCamera("camera", 0, AL::kQVGA, AL::kBGRColorSpace, 30);
+  } else if (camera_type_ == CameraType::robot) {
+    startRobotCamera();
   }
 
   cv::Mat img;
   while (next) {
     // Get newest image from device
-    if (orange_ball.camera_type_ == CameraType::folder) {
-      img = imgs.back();
-      imgs.pop_back();
-      next = imgs.size() > 0;
-    } else if (orange_ball.camera_type_ == CameraType::webcam) {
-      orange_ball.getImgFromWebcam(cap, img);
-    } else if (orange_ball.camera_type_ == CameraType::robot) {
-      orange_ball.getImgFromRobot(cam_proxy, camera_client, img);
+    if (camera_type_ == CameraType::folder) {
+      img = imgs_.back();
+      imgs_.pop_back();
+      next = imgs_.size() > 0;
+    } else if (camera_type_ == CameraType::webcam) {
+      getImgFromWebcam(img);
+    } else if (camera_type_ == CameraType::robot) {
+      getImgFromRobot(img);
     }
 
     // Run ball detector
-    Ball ball = orange_ball.detectOrangeBall(img);
+    Ball ball = detectOrangeBall(img);
+    // Draw ball if detected
     if (!ball.r == std::numeric_limits<int>::infinity()) {
       cv::circle(img, cv::Point(ball.x, ball.y), ball.r, cv::Scalar(0, 255, 0), 2);
       cv::circle(img, cv::Point(ball.x, ball.y), 2, cv::Scalar(0, 0, 255), 3);
@@ -143,7 +140,7 @@ int main() {
 
     // Show image
     cv::imshow("Orange ball detector", img);
-    if (orange_ball.camera_type_ == CameraType::folder) {
+    if (camera_type_ == CameraType::folder) {
       // Press any key to go to the next img
       cv::waitKey(0);
     } else {
@@ -155,11 +152,9 @@ int main() {
 
   cv::destroyAllWindows();
 
-  if (orange_ball.camera_type_ == CameraType::webcam) {
-    cap.release();
-  } else if (orange_ball.camera_type_ == CameraType::robot) {
-    cam_proxy->unsubscribe(camera_client);
+  if (camera_type_ == CameraType::webcam) {
+    cap_.release();
+  } else if (camera_type_ == CameraType::robot) {
+    stopRobotCamera();
   }
-
-  return 0;
 }

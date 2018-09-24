@@ -10,10 +10,11 @@ from orange_ball import create_video_connection, get_img_from_robot, detect_oran
 
 from kick import kick
 
-
+# Robot name as shown on its head followed by .local
 IP = "EVE.local"
 PORT = 9559
 
+# TODO: add separate kick
 # Tracking method: 0: head, 1: walk to ball
 TRACKING_METHOD = 1
 
@@ -25,7 +26,7 @@ NUMBER_HEAD_SEARCH = len(HEAD_SEARCH)
 
 head_search_index = 0
 
-def start_motion_and_posture_proxy():
+def start_proxies():
     '''
     Start the motion and posture proxy and let the robot stand up.
     '''
@@ -108,7 +109,7 @@ def search_for_ball(motion_proxy):
 def main():
     # Start connection with the robot
     video_device, capture_device = create_video_connection(IP, PORT, 1)
-    motion_proxy, posture_proxy, memory_proxy = start_motion_and_posture_proxy()
+    motion_proxy, posture_proxy, memory_proxy = start_proxies()
     times_no_ball = 0
     while (True):
         img = get_img_from_robot(video_device, capture_device)
