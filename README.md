@@ -13,10 +13,10 @@ When using a V6 download for your OS: </br>
   - For Python check http://doc.aldebaran.com/2-1/dev/python/install_guide.html for how to install
   - **NOTE**: If you get linking errors, please ask one of our team members for a working SDK.
   - For C++ check http://doc.aldebaran.com/2-1/dev/cpp/install_guide.html
-  - **NOTE**: We want to use our own OpenCV and not the one from Naoqi, so after installing OpenCV (next step) http://doc.aldebaran.com/2-4/dev/cpp/examples/vision/opencv.html:
-    - Once you have OpenCV installed for your system, you have to remove it from the SDK. Do not remove the CMake configuration files.
-    - Remove all OpenCV libraries from the lib/ directory of the SDK. They will have the following format: libopencv_modulename.so, libcv.so, libhighui.so and libml.so
-    - Remove the opencv folder from the include folder
+    - **NOTE**: We want to use our own OpenCV and not the one from Naoqi, so after installing OpenCV (next step) http://doc.aldebaran.com/2-4/dev/cpp/examples/vision/opencv.html:
+      - Once you have OpenCV installed for your system, you have to remove it from the SDK. Do not remove the CMake configuration files.
+      - Remove all OpenCV libraries from the lib/ directory of the SDK. They will have the following format: libopencv_modulename.so, libcv.so, libhighui.so and libml.so
+      - Remove the opencv folder from the include folder
 
 * [OpenCV](https://opencv.org/)
   - Please google yourself how to install it for your OS.
