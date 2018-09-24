@@ -9,7 +9,7 @@ If you are using a V5 robot, download for your OS: </br>
 `[FORMER NAO VERSIONS] - Python NAOqi SDK` for Python. </br>
 `[FORMER NAO VERSIONS] - C++ NAOqi SDK` for C++. </br>
 When using a V6 download for your OS: </br>
-`[NAO V6 ONLY] - SDKs and documentation 2.8.3 View archives`
+`[NAO V6 ONLY] - SDKs and documentation 2.8.3`
   - For Python check http://doc.aldebaran.com/2-1/dev/python/install_guide.html for how to install
   - **NOTE**: If you get linking errors, please ask one of our team members for a working SDK.
   - For C++ check http://doc.aldebaran.com/2-1/dev/cpp/install_guide.html
