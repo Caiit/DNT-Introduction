@@ -38,6 +38,16 @@ private:
   void trackBallWithHead(int x, int y, int width, int height);
 
   /**
+   * Move towards the ball.
+   */
+  void moveToBall(int x, int y, int width, int height);
+
+  /**
+   * Consider kicking, if close enough to the ball, kick, otherwise walk to the ball.
+   */
+  void considerKicking(int x, int y, int width, int height);
+
+  /**
   * IP of the robot.
   * Robot name as shown on its head followed by .local
   */
