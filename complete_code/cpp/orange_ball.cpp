@@ -41,8 +41,11 @@ void OrangeBall::stopRobotCamera() {
 void OrangeBall::getImgFromRobot(cv::Mat& img) {
   AL::ALValue al_img = cam_proxy_->getImageRemote(camera_client_);
 
-  img.data = (uchar*) al_img[6].GetBinary();
+  cv::Mat img_header = cv::Mat(cv::Size(320, 240), CV_8UC3);
+  img_header.data = (uchar*) al_img[6].GetBinary();
   cam_proxy_->releaseImage(camera_client_);
+
+  img_header.copyTo(img);
 }
 
 cv::Mat OrangeBall::maskImg(cv::Mat img) {
