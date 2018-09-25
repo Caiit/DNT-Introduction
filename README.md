@@ -1,5 +1,5 @@
 # DNT-Introduction
-Introduction for the Dutch Nao Team: learn how to program robots to play football.
+Introduction for the Dutch Nao Team: learn how to program robots to play football. If you have any problems with installing or the code, please email me (caitlin@dutchnaoteam.nl).
 
 Requirements:
 
@@ -11,7 +11,7 @@ If you are using a V5 robot, download for your OS: </br>
 When using a V6 download for your OS: </br>
 `[NAO V6 ONLY] - SDKs and documentation 2.8.3`
   - For Python check http://doc.aldebaran.com/2-1/dev/python/install_guide.html for how to install
-  - **NOTE**: If you get linking errors, please ask one of our team members for a working SDK.
+  - **NOTE**: If you get linking errors, please ask one of our team members for a working SDK or email me.
   - For C++ check http://doc.aldebaran.com/2-1/dev/cpp/install_guide.html
     - **NOTE**: We want to use our own OpenCV and not the one from Naoqi, so after installing OpenCV (next step) http://doc.aldebaran.com/2-4/dev/cpp/examples/vision/opencv.html:
       - Once you have OpenCV installed for your system, you have to remove it from the SDK. Do not remove the CMake configuration files.
