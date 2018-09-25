@@ -1,5 +1,6 @@
 # DNT-Introduction
 Introduction for the Dutch Nao Team: learn how to program robots to play football. If you have any problems with installing or the code, please email me (caitlin@dutchnaoteam.nl).
+The `complete_code` folder contains the complete code to let a robot play football. In `template_code` the functions exists, but are not filled. In `DNT_Introduction.pdf` a introduction to our team and how to use this code is given.
 
 Requirements:
 
