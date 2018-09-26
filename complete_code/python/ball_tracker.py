@@ -11,7 +11,7 @@ from orange_ball import create_video_connection, get_img_from_robot, detect_oran
 from kick import kick
 
 # Robot name as shown on its head followed by .local
-IP = "EVE.local"
+IP = "jerry.local"
 PORT = 9559
 
 # TODO: add separate kick
@@ -86,7 +86,7 @@ def kick_ball(motion_proxy, posture_proxy, x, width):
     '''
     motion_proxy.stopMove()
     posture_proxy.goToPosture("StandInit", 0.5)
-    kick(motion_proxy, -1.0 * np.sign(x - 0.5 * width))
+    kick(motion_proxy, 1.0 * np.sign(x - 0.5 * width))
     posture_proxy.goToPosture("StandInit", 0.5)
     motion_proxy.setAngles("HeadPitch", 0.3, 0.1)
 
