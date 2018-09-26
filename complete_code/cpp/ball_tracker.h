@@ -48,10 +48,15 @@ private:
   void considerKicking(int x, int y, int width, int height);
 
   /**
+   * Perform kick motion.
+   */
+  void kick(bool side);
+
+  /**
   * IP of the robot.
   * Robot name as shown on its head followed by .local
   */
-  std::string IP = "EVE.local";
+  std::string IP = "jerry.local";
 
   /**
   * Port of the robot.
@@ -61,7 +66,7 @@ private:
   /**
    * Specify the tranking method
    */
-  TrackingMethod tracking_method_ = TrackingMethod::head;
+  TrackingMethod tracking_method_ = TrackingMethod::kick;
 
   /**
    * The motion proxy.

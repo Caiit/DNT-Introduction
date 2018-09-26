@@ -29,9 +29,9 @@ void OrangeBall::setRobotIpAndPort(std::string ip, int port) {
   PORT = port;
 }
 
-void OrangeBall::startRobotCamera() {
+void OrangeBall::startRobotCamera(int camera) {
   cam_proxy_ = new AL::ALVideoDeviceProxy(IP, PORT);
-  camera_client_ = cam_proxy_->subscribeCamera("camera", 0, AL::kQVGA, AL::kBGRColorSpace, 30);
+  camera_client_ = cam_proxy_->subscribeCamera("camera", camera, AL::kQVGA, AL::kBGRColorSpace, 30);
 }
 
 void OrangeBall::stopRobotCamera() {
@@ -117,7 +117,7 @@ void OrangeBall::detect() {
       return;
     }
   } else if (camera_type_ == CameraType::robot) {
-    startRobotCamera();
+    startRobotCamera(0);
   }
 
   cv::Mat img;

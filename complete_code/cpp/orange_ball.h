@@ -54,7 +54,7 @@ public:
    * Create a connection with the robot and start a camera proxy.
    * http://doc.aldebaran.com/2-4/dev/cpp/examples/vision/getimage/getimage.html
    */
-  void startRobotCamera();
+  void startRobotCamera(int camera);
 
   /**
    * Stop the camera of the robot.
