@@ -40,6 +40,7 @@ Compile cpp code with naoqi:
 
 
 <h2> Trouble shooting </h2>
+
 * If you get an error with `cv::HOUGH_LINES` change the lines 65 and 99 in `orangeball.cpp` to the line that are commented above it.
 * If you get `undefined reference` to something related to Naoqi (for example
   `undefined reference to qi::log::log`) use `g++-4.8`.
