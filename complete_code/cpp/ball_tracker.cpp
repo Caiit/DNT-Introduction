@@ -14,10 +14,12 @@ void BallTracker::trackBallWithHead(int x, int y, int width, int height) {
   float hor_dist_to_centre = x - 0.5 * width;
   float ver_dist_to_centre = y - 0.5 * height;
   if (std::abs(hor_dist_to_centre) > 15) {
-    motion_proxy_->changeAngles("HeadYaw", 0.03*std::signbit(hor_dist_to_centre), 0.1);
+    int direction = std::signbit(hor_dist_to_centre) ? 1 : -1;
+    motion_proxy_->changeAngles("HeadYaw", 0.03*direction, 0.1);
   }
   if (std::abs(ver_dist_to_centre) > 15) {
-    motion_proxy_->changeAngles("HeadPitch", -0.03*std::signbit(ver_dist_to_centre), 0.1);
+    int direction = std::signbit(ver_dist_to_centre) ? 1 : -1;
+    motion_proxy_->changeAngles("HeadPitch", -0.03*direction, 0.1);
   }
 }
 
@@ -29,7 +31,8 @@ void BallTracker::moveToBall(int x, int y, int width, int height) {
   float hor_dist_to_centre = x - 0.5 * width;
   if (std::abs(hor_dist_to_centre) > 10) {
     // If ball not in centre, turn towards the ball
-    theta = -0.3 * std::signbit(x - 0.5 * width);
+    int dir = std::signbit(x - 0.5 * width) ? 1 : -1;
+    theta = -0.3 * dir;
   }
   if (y > (height / 2 + 15)) {
     // If close to ball, walk slower
