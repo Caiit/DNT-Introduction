@@ -32,8 +32,25 @@ private:
    */
   void startProxies();
 
+  /**
+   * Move the head such that the ball is in the centre of the image.
+   */
   void trackBallWithHead(int x, int y, int width, int height);
 
+  /**
+   * Move towards the ball.
+   */
+  void moveToBall(int x, int y, int width, int height);
+
+  /**
+   * Consider kicking, if close enough to the ball, kick, otherwise walk to the ball.
+   */
+  void considerKicking(int x, int y, int width, int height);
+
+  /**
+   * Perform kick motion.
+   */
+  void kick(bool side);
 
   /**
   * IP of the robot.
@@ -49,7 +66,7 @@ private:
   /**
    * Specify the tranking method
    */
-  TrackingMethod tracking_method_ = TrackingMethod::head;
+  TrackingMethod tracking_method_ = TrackingMethod::kick;
 
   /**
    * The motion proxy.

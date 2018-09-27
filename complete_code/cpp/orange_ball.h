@@ -103,14 +103,14 @@ private:
   Ball detectCircles(cv::Mat img);
 
   /**
-  * IP of the robot.
-  * Robot name as shown on its head followed by .local
-  */
+   * IP of the robot.
+   * Robot name as shown on its head followed by .local
+   */
   std::string IP = "EVE.local";
 
   /**
-  * Port of the robot.
-  */
+   * Port of the robot.
+   */
   int PORT = 9559;
 
   /**

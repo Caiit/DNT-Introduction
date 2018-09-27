@@ -54,7 +54,7 @@ public:
    * Create a connection with the robot and start a camera proxy.
    * http://doc.aldebaran.com/2-4/dev/cpp/examples/vision/getimage/getimage.html
    */
-  void startRobotCamera();
+  void startRobotCamera(int camera);
 
   /**
    * Stop the camera of the robot.
@@ -104,13 +104,14 @@ private:
 
   /**
    * IP of the robot.
+   * Robot name as shown on its head followed by .local
    */
-  std::string IP = "localhost";
+  std::string IP = "EVE.local";
 
   /**
    * Port of the robot.
    */
-  int PORT = 46575;
+  int PORT = 9559;
 
   /**
    * Specify which camera needs to be used.
