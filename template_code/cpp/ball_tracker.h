@@ -48,6 +48,11 @@ private:
   void considerKicking(int x, int y, int width, int height);
 
   /**
+   * Search for the ball by moving the head in a pattern.
+   */
+  void searchForBall();
+
+  /**
    * Perform kick motion.
    */
   void kick(bool side);

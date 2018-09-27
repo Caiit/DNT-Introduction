@@ -64,6 +64,17 @@ void BallTracker::considerKicking(int x, int y, int width, int height) {
   }
 }
 
+void BallTracker::searchForBall() {
+  motion_proxy_->stopMove();
+  motion_proxy_->setAngles("HeadYaw", head_search_yaw_[head_search_index_], 0.1);
+  motion_proxy_->setAngles("HeadPitch", head_search_pitch_[head_search_index_], 0.1);
+  ++head_search_index_;
+  // TODO: not hardcode the 8
+  if (head_search_index_ > 8) {
+    head_search_index_ = 0;
+  }
+}
+
 void BallTracker::track() {
   OrangeBall ball_detector;
   ball_detector.setRobotIpAndPort(IP, PORT);
@@ -76,6 +87,9 @@ void BallTracker::track() {
 
     // If ball found
     if (!ball.r == std::numeric_limits<int>::infinity()) {
+      // Resert search for ball variables
+      times_no_ball_ = 0;
+      head_search_index_ = 0;
       if (tracking_method_ == TrackingMethod::head) {
         trackBallWithHead(ball.x, ball.y, img.cols, img.rows);
       } else if (tracking_method_ == TrackingMethod::walk) {
@@ -86,6 +100,12 @@ void BallTracker::track() {
       // Draw circles on the ball
       cv::circle(img, cv::Point(ball.x, ball.y), ball.r, cv::Scalar(0, 255, 0), 2);
       cv::circle(img, cv::Point(ball.x, ball.y), 2, cv::Scalar(0, 0, 255), 3);
+    } else {
+      // No ball found
+      if (times_no_ball_ > 5) {
+        searchForBall();
+      }
+      ++times_no_ball_;
     }
     // Show image
     cv::imshow("Orange ball detector", img);
@@ -103,7 +123,7 @@ void BallTracker::track() {
 }
 
 void BallTracker::kick(bool side=false) {
-    posture_proxy_->goToPosture("StandInit", 0.5);    
+    posture_proxy_->goToPosture("StandInit", 0.5);
     bool isAbsolute = true;
 
     if (side) {

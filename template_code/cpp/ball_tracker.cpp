@@ -19,6 +19,10 @@ void BallTracker::considerKicking(int x, int y, int width, int height) {
   // Otherwise just walk towards the ball
 }
 
+void BallTracker::searchForBall() {
+  // Search for the ball by moving the robots head
+}
+
 void BallTracker::track() {
   // Start connections with the robot
   // Obtain image from the robot and detect the ball

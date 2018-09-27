@@ -48,6 +48,11 @@ private:
   void considerKicking(int x, int y, int width, int height);
 
   /**
+   * Search for the ball by moving the head in a pattern.
+   */
+  void searchForBall();
+
+  /**
    * Perform kick motion.
    */
   void kick(bool side);
@@ -56,7 +61,7 @@ private:
   * IP of the robot.
   * Robot name as shown on its head followed by .local
   */
-  std::string IP = "jerry.local";
+  std::string IP = "EVE.local";
 
   /**
   * Port of the robot.
@@ -82,4 +87,17 @@ private:
    * The memory proxy.
    */
   AL::ALMemoryProxy* memory_proxy_;
+
+  /**
+   * Amount of times that the ball is not seen.
+   */
+  int times_no_ball_ = 0;
+
+  /**
+   * Index of the head search.
+   */
+  int head_search_index_ = 0;
+
+  float head_search_yaw_[9]   = {0.f, -1.f,  -2.f,  -1.f,  0.f, 1.f,  2.f,  1.f,  0.f};
+  float head_search_pitch_[9] = {0.f, -0.3f, -0.5f, -0.3f, 0.f, 0.3f, 0.5f, 0.3f, 0.f};
 };
