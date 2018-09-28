@@ -1,9 +1,8 @@
 def kick(motion_proxy, side=0):
     '''
     Perform the DNT kick.
-    Side 0 is left, side 1 is right
     '''
-    # TODO: check
+    motion_proxy.setFallManagerEnabled(False)
     if side == 1:
         # Kick towards left with right leg
         names = ['RShoulderRoll', 'RShoulderPitch', 'LShoulderRoll', 'LShoulderPitch', 'RHipRoll',

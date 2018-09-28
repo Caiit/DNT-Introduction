@@ -19,7 +19,7 @@ void OrangeBall::setRobotIpAndPort(std::string ip, int port) {
   // Set ip and port
 }
 
-void OrangeBall::startRobotCamera() {
+void OrangeBall::startRobotCamera(int camera) {
   // Start robot camera
 }
 

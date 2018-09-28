@@ -57,3 +57,4 @@ Compile cpp code with naoqi:
 
   If you have problems using that code, your opencv is not installed or linked
   correctly, otherwise the combination with Naoqi and OpenCV is not working correctly.
+* If you get an error about the fallmanager when you try the kick, try: http://doc.aldebaran.com/2-1/naoqi/motion/reflexes-fall-manager.html
